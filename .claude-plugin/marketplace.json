@@ -1,0 +1,14 @@
+{
+  "name": "kntnt-skills",
+  "owner": {
+    "name": "Thomas Barregren",
+    "url": "https://kntnt.com"
+  },
+  "plugins": [
+    {
+      "name": "kntnt-skills",
+      "source": { "source": "github", "repo": "Kntnt/kntnt-skills" },
+      "description": "General-purpose Kntnt skills for Claude Code that do not belong to a specialised plugin. Currently ships the agents-md skill."
+    }
+  ]
+}

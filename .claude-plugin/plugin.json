@@ -1,0 +1,14 @@
+{
+  "name": "kntnt-skills",
+  "version": "0.1.0",
+  "description": "General-purpose Kntnt skills for Claude Code that do not belong to any of the themed Kntnt plugins. Currently ships agents-md, which creates and optimises AGENTS.md / CLAUDE.md context files so an agent loads the minimum it needs and nothing misleading.",
+  "author": {
+    "name": "Thomas Barregren",
+    "email": "thomas@kntnt.com",
+    "url": "https://kntnt.com"
+  },
+  "homepage": "https://github.com/Kntnt/kntnt-skills",
+  "repository": "https://github.com/Kntnt/kntnt-skills",
+  "license": "Apache-2.0",
+  "keywords": ["claude-code", "skills", "agents-md", "claude-md", "context", "general-purpose"]
+}

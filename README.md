@@ -64,7 +64,7 @@ Contributions are welcome, small or large – reporting a bug, requesting a feat
 
 ## License
 
-kntnt-skills is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for the full text.
+kntnt-skills is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for the full text and [NOTICE](NOTICE) for attribution.
 
 ## Changelog
 
