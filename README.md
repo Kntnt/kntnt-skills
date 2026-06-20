@@ -13,7 +13,7 @@ Without a home of this kind, a standalone skill has two poor options: a reposito
 
 ### Available skills
 
-- **`/agents-md`** – create lean, portable agent context files, or distil existing ones down to what earns its place. It keeps an always-loaded `AGENTS.md` / `CLAUDE.md` minimal, so an agent loads the context it needs and nothing misleading.
+- **`/agents-md`** – minimise the tokens an agent must load from `CLAUDE.md` / `AGENTS.md`. It keeps only what every session truly needs, compresses it hard, splits the rest into small on-demand `agents.d/` files, and creates nothing (or deletes existing files) when there is nothing load-bearing to keep.
 
 ### The Kntnt skill family
 
@@ -50,7 +50,15 @@ Each skill is invoked by its slash command.
 
 ### `/agents-md`
 
-Run `/agents-md` in a repository to optimise its root `CLAUDE.md` / `AGENTS.md`. Pass `/agents-md <path>` to target a specific directory or file, or `/agents-md --global` to work on your global `~/.claude/CLAUDE.md`. The skill is subtractive by default: it removes and relocates more often than it adds, and it reports what it changed and why.
+Run `/agents-md` in a repository to shrink its root `CLAUDE.md` / `AGENTS.md` to the fewest tokens that still carry what every session needs; everything situational moves to small on-demand `agents.d/` files. Target something else with `/agents-md <path>` (a specific directory or file) or `/agents-md --global` (your global `~/.claude/CLAUDE.md`).
+
+Flags:
+
+- `--max-iterations=N` – depth of the build-and-review loop that compresses the files (default 2; above 3 it asks first).
+- `--no-claude-md` – write only `AGENTS.md`, with no `CLAUDE.md` bridge (for tools that read `AGENTS.md` directly).
+- `--only-claude-md` – write a single `CLAUDE.md` holding the content directly, with no `AGENTS.md`.
+
+The skill is subtractive and compressive: it deletes, compresses and splits far more than it adds, and reports the before/after token counts so you can see the saving.
 
 ## Questions, bugs, and feature requests
 
