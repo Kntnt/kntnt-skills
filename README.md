@@ -14,6 +14,7 @@ Without a home of this kind, a standalone skill has two poor options: a reposito
 ### Available skills
 
 - **`/agents-md`** – minimise the tokens an agent must load from `CLAUDE.md` / `AGENTS.md`. It keeps only what every session truly needs, compresses it hard, splits the rest into small on-demand `agents.d/` files, and creates nothing (or deletes existing files) when there is nothing load-bearing to keep.
+- **`/caveman`** – apply caveman compression (maximum meaning per token, with no loss of facts, code, numbers or register) to everything the agent says, or one-shot to a single text or file. Turn it on with `/caveman` or `/caveman --on` and off with `/caveman --off`; compress one text or file with `/caveman <ref>` or `/caveman --file=<path>` without changing that on/off state. It shares its definition of "caveman" with `/agents-md` through `lib/caveman.md`.
 
 ### The Kntnt skill family
 
@@ -59,6 +60,14 @@ Flags:
 - `--only-claude-md` – write a single `CLAUDE.md` holding the content directly, with no `AGENTS.md`.
 
 The skill is subtractive and compressive: it deletes, compresses and splits far more than it adds, and reports the before/after token counts so you can see the saving.
+
+### `/caveman`
+
+Turn caveman compression on for all of the agent's output with `/caveman` (or `/caveman --on`), and off again with `/caveman --off`. While on, the agent answers in maximum-meaning-per-token style without dropping facts, code, numbers, or the register of anything you ask it to write. It stays on for the rest of the session; if a very long conversation drifts back to verbose, run `/caveman` again.
+
+Compress a single piece of text without touching that on/off state: `/caveman <ref>`, where `<ref>` is a filename, path, URL, a description of a file ("the file you just created") or a reference to text you paste below; or name a file explicitly with `/caveman --file=<path>`. The result is shown with its before/after size, never written over the source unless you ask.
+
+Both skills draw their rules from `lib/caveman.md`, so `/caveman` and `/agents-md` compress the same way.
 
 ## Questions, bugs, and feature requests
 

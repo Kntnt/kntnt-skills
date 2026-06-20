@@ -104,7 +104,7 @@ inline part grows past a handful of facts, something in it is situational — re
 ### Gate 3 — Express it in the fewest tokens
 
 Everything written — inline facts, `agents.d/` files, References lines — is compressed
-to caveman density (rules below). A fact kept is a fact stripped to its load-bearing
+to caveman density (rules in `lib/caveman.md`). A fact kept is a fact stripped to its load-bearing
 core. This is the gate the photo-drop run skipped: it moved 14 KB of prose into
 `agents.d/` almost verbatim and the total grew. Compression is mandatory, not optional.
 
@@ -112,38 +112,27 @@ core. This is the gate the photo-drop run skipped: it moved 14 KB of prose into
 
 ## Compression (caveman) rules
 
-Apply to all prose this skill writes or rewrites. Goal: maximum meaning per token.
+The shared definition lives in `${CLAUDE_PLUGIN_ROOT}/lib/caveman.md` — the caveman
+core (CUT / KEEP / VERBATIM, "correctness beats brevity", language-agnostic). It governs
+gate 3. Read it. **Subagents do not auto-load it** — read the file and paste its content
+into each build subagent's prompt.
 
-**Drop:**
-- Articles (`a`, `an`, `the`) where sense survives.
-- Filler — `just`, `really`, `basically`, `actually`, `simply`, `of course`.
-- Hedging — `it might be worth`, `you could consider`, `in general`.
-- Pleasantries and weak connectors — `however`, `furthermore`, `moreover`, `note that`.
-- Subjects of instructions — `you should X`, `remember to X`, `make sure to X` → `X`.
-- Redundancy — `in order to` → `to`; collapse two sentences saying one thing into one.
+This skill writes one genre — terse agent-facing instruction Markdown — so on top of the
+shared core it adds two context-file specializations:
 
-**Compress:**
-- Full sentences → fragments and imperatives. "Run tests before push", not "You should
-  always make sure to run the test suite before pushing."
-- Verbose synonym → short word.
-- Repeated pattern → one example, not three.
+- **Convert prose to imperatives.** Full sentences → fragments and imperatives ("Run
+  tests before push"). Drop instruction-subjects — `you should X` / `remember to X` /
+  `make sure to X` → `X`.
+- **Before → after** (the density expected here):
+  - "This plugin is currently in pre-1.0 development, and as long as the major version
+    is 0, no decision should factor in backwards compatibility." → "Pre-1.0 (major `0`):
+    ignore backwards-compat. No deprecations, no migrations."
+  - "You should clone the reference repository next to this one and read it as the
+    template before you write any code." → "Before coding, clone `<repo>` as template:
+    `git clone … /tmp/<repo>`."
 
-**Protect absolutely — never abbreviate or reword:**
-- Code, inline `code`, fenced blocks, file paths, commands, flags.
-- URLs, identifiers, function/hook names, env vars, version numbers.
-- Error strings (verbatim — an abbreviated error string is useless).
-- Markdown structure: headings, lists, tables, YAML frontmatter.
-
-**Before → after:**
-- "This plugin is currently in pre-1.0 development, and as long as the major version
-  is 0, no decision should factor in backwards compatibility." → "Pre-1.0 (major `0`):
-  ignore backwards-compat. No deprecations, no migrations."
-- "You should clone the reference repository next to this one and read it as the
-  template before you write any code." → "Before coding, clone `<repo>` as template:
-  `git clone … /tmp/<repo>`."
-
-Compression must not change meaning or drop a load-bearing qualifier. If shortening
-would make a fact ambiguous or wrong, keep the words — correctness beats brevity.
+Everything else — what to drop, what to keep verbatim, never dropping a load-bearing
+qualifier — is in `lib/caveman.md` and is not restated here.
 
 ---
 
@@ -238,7 +227,8 @@ confirm before running the loop.
 1. **Plan.** Decide the file set: the AGENTS.md inline facts, the `agents.d/` split
    (one concern per file), the References index. This is gate 1/2 work — do it yourself.
 2. **Build.** Spawn a subagent per file (independent files run in parallel), each given
-   the source material, the compression rules, and "return file content only, caveman-
+   the source material, the contents of `lib/caveman.md` plus this skill's imperative-
+   genre additions, and "return file content only, caveman-
    compressed, protected tokens intact."
 3. **Critique.** Review each returned draft adversarially against: every line passes
    gate 1; caveman-compressed (no articles/filler/hedging; fragments; protected tokens
