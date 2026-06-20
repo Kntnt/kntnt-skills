@@ -1,6 +1,6 @@
 {
   "name": "kntnt-skills",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "General-purpose Kntnt skills for Claude Code that do not belong to any of the themed Kntnt plugins. Ships agents-md, which creates and optimises AGENTS.md / CLAUDE.md context files so an agent loads the minimum it needs and nothing misleading, and caveman, which compresses the agent's output (or a given text) to maximum meaning per token without losing facts.",
   "author": {
     "name": "Thomas Barregren",

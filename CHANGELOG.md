@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.4.0] – 2026-06-20
+
+### Added
+
+- **`/help`** – a typed-only command (`/kntnt-skills:help [skill-name]`) and its renderer `scripts/help.py`: a manpage-style overview of the plugin's skills, or one skill's details. The command is disabled for model invocation, so it runs only when typed; `scripts/help.py` renders the whole block from the plugin's own `.claude-plugin/plugin.json` and each `skills/<name>/SKILL.md`, so the help can never drift from the actual skills. It follows the same pattern and shares the same renderer logic as `/kntnt-code-skills:help`. The renderer is a standalone PEP 723 script run via `uv`.
+
+### Changed
+
+- **`README.md`** now documents the `/help` command (in the skills list and a usage subsection) and records that `uv` is required, but only for `/help`; the previous blanket "no external dependencies" note is corrected accordingly.
+
 ## [0.3.0] – 2026-06-20
 
 ### Added
@@ -39,6 +49,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Plugin manifest (`.claude-plugin/plugin.json`) and single-plugin marketplace (`.claude-plugin/marketplace.json`) so the plugin installs via `/plugin marketplace add Kntnt/kntnt-skills`.
 - `README.md`, `LICENSE` (Apache-2.0), `NOTICE` and an agent guide (`AGENTS.md` with the `CLAUDE.md` bridge).
 
-[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.2.0
