@@ -19,3 +19,19 @@ text and copyright notice (Copyright (c) 2026 Matt Pocock) are in
 lib/vendor/matt-pocock/LICENSE. The skill-maker and plugin-maker skills build on
 these files; Kntnt's own conventions on top of them are in lib/skill-conventions.md
 and lib/plugin-standard.md.
+
+---
+
+This product is inspired by third-party work it does not bundle:
+
+The caveman-compression concept formalised in lib/caveman.md originates with
+Julius Brussee's "caveman" skill for Claude Code:
+https://github.com/JuliusBrussee/caveman
+
+The observation that a minimal rule set can outperform a long one comes from
+Kuba Guzik's benchmark of that prompt:
+https://github.com/kuba-guzik/caveman-micro
+https://medium.com/@KubaGuzik/i-benchmarked-the-viral-caveman-prompt-to-save-llm-tokens-then-my-6-line-version-beat-it-d8e565f95e15
+
+Kntnt's lib/caveman.md is an independent expression of these ideas, not a copy
+of either author's text or code.

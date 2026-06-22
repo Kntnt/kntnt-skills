@@ -1,6 +1,6 @@
 {
   "name": "kntnt-skills",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "General-purpose Kntnt skills for Claude Code and Cowork that do not belong to any of the themed Kntnt plugins. Ships agents-md (lean, portable AGENTS.md / CLAUDE.md context files), caveman (maximum meaning per token without losing facts), skill-maker (author one skill to the Kntnt standard) and plugin-maker (scaffold a whole standard-compliant plugin, orchestrating skill-maker).",
   "author": {
     "name": "Thomas Barregren",

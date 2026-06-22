@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.5.1] – 2026-06-22
+
+### Changed
+
+- **`NOTICE`** now credits the caveman-compression idea (Julius Brussee) and the observation that a minimal rule set can outperform a long one (Kuba Guzik), in a section kept separate from the bundled third-party code.
+
 ## [0.5.0] – 2026-06-22
 
 ### Added
@@ -66,7 +72,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Plugin manifest (`.claude-plugin/plugin.json`) and single-plugin marketplace (`.claude-plugin/marketplace.json`) so the plugin installs via `/plugin marketplace add Kntnt/kntnt-skills`.
 - `README.md`, `LICENSE` (Apache-2.0), `NOTICE` and an agent guide (`AGENTS.md` with the `CLAUDE.md` bridge).
 
-[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.0
 [0.4.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.3.0
