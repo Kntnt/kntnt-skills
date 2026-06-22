@@ -1,0 +1,14 @@
+{
+  "name": "{{PLUGIN_NAME}}",
+  "owner": {
+    "name": "{{AUTHOR_NAME}}",
+    "url": "{{AUTHOR_URL}}"
+  },
+  "plugins": [
+    {
+      "name": "{{PLUGIN_NAME}}",
+      "source": { "source": "github", "repo": "{{OWNER}}/{{PLUGIN_NAME}}" },
+      "description": "{{PLUGIN_DESCRIPTION}}"
+    }
+  ]
+}

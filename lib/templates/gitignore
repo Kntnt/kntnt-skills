@@ -22,6 +22,3 @@ __pycache__/
 
 # Claude Code local settings
 .claude/settings.local.json
-
-# skill-creator eval workspace (local only)
-skills/agents-md-workspace/

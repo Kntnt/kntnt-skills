@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/github/license/Kntnt/kntnt-skills)](LICENSE)
 [![Latest release](https://img.shields.io/github/v/release/Kntnt/kntnt-skills)](https://github.com/Kntnt/kntnt-skills/releases/latest)
+[![Audit](https://github.com/Kntnt/kntnt-skills/actions/workflows/audit.yml/badge.svg)](https://github.com/Kntnt/kntnt-skills/actions/workflows/audit.yml)
 
 kntnt-skills is a Claude Code plugin that collects Kntnt's general-purpose skills – the ones that are useful on their own but do not belong to any of the themed Kntnt plugins.
 
@@ -15,6 +16,8 @@ Without a home of this kind, a standalone skill has two poor options: a reposito
 
 - **`/agents-md`** – minimise the tokens an agent must load from `CLAUDE.md` / `AGENTS.md`. It keeps only what every session truly needs, compresses it hard, splits the rest into small on-demand `agents.d/` files, and creates nothing (or deletes existing files) when there is nothing load-bearing to keep.
 - **`/caveman`** – apply caveman compression (maximum meaning per token, with no loss of facts, code, numbers or register) to everything the agent says, or one-shot to a single text or file. Turn it on with `/caveman` or `/caveman --on` and off with `/caveman --off`; compress one text or file with `/caveman <ref>` or `/caveman --file=<path>` without changing that on/off state. It shares its definition of "caveman" with `/agents-md` through `lib/caveman.md`.
+- **`/skill-maker`** – author one complete skill to the Kntnt standard. It interviews you one question at a time, applies Matt Pocock's skill-writing craft and Kntnt's house conventions, and writes the `SKILL.md` (and any shared `lib/` it needs). Use it standalone to add a skill, or let `/plugin-maker` drive it for each skill of a new plugin.
+- **`/plugin-maker`** – scaffold a whole Claude Code / Cowork plugin to the Kntnt standard. It interviews the design, generates the standard file shell from templates with your identity filled in, authors each skill via `skill-maker`, wires up help, audit, README and changelog, then runs `/agents-md`, initialises git and stops before anything outward-facing. Works greenfield (an empty folder) or in augment mode (add a skill to an existing plugin).
 - **`/help`** – a typed-only command (`/kntnt-skills:help [skill-name]`): a manpage-style overview of the plugin's skills, or one skill's details. Its output is rendered from the plugin's own `.claude-plugin/plugin.json` and `skills/<name>/SKILL.md` by `scripts/help.py`, so it never drifts from the actual skills.
 
 ### The Kntnt skill family
@@ -29,7 +32,7 @@ Reach for kntnt-skills for the useful things that fall outside those three.
 
 ## Requirements
 
-kntnt-skills runs in Claude Code or Claude Cowork. It needs support for slash commands, YAML frontmatter (including `disable-model-invocation`) and skills. The two skills require no external services or dependencies. The `/help` command renders its output with [uv](https://docs.astral.sh/uv/), which runs `scripts/help.py` (a standard-library-only PEP 723 script) and provisions Python 3.12+ from the script's own metadata; uv is needed only for `/help`.
+kntnt-skills runs in Claude Code or Claude Cowork. It needs support for slash commands, YAML frontmatter (including `disable-model-invocation`) and skills. The skills require no external services or dependencies: Matt Pocock's skill-writing and grilling references that `skill-maker` and `plugin-maker` build on are vendored into the plugin under `lib/vendor/matt-pocock/`, so nothing extra need be installed. The `/help` command and the audit (`scripts/audit.py`) render and run through [uv](https://docs.astral.sh/uv/), which executes standard-library-only PEP 723 scripts and provisions Python 3.12+ from each script's own metadata; uv is needed only for `/help` and the audit.
 
 ## Installation
 
@@ -69,6 +72,14 @@ Turn caveman compression on for all of the agent's output with `/caveman` (or `/
 Compress a single piece of text without touching that on/off state: `/caveman <ref>`, where `<ref>` is a filename, path, URL, a description of a file ("the file you just created") or a reference to text you paste below; or name a file explicitly with `/caveman --file=<path>`. The result is shown with its before/after size, never written over the source unless you ask.
 
 Both skills draw their rules from `lib/caveman.md`, so `/caveman` and `/agents-md` compress the same way.
+
+### `/skill-maker`
+
+Run `/skill-maker` to author one skill, or `/skill-maker <name or plan>` to seed it with anything from a bare name to a detailed plan. It interviews you to settle every load-bearing decision – the leading word, the invocation type, the trigger boundary, the steps-vs-reference shape, what goes in `lib/` – then writes `skills/<name>/SKILL.md` (plus any shared module) following Matt Pocock's craft and Kntnt's conventions. The general craft and the interview protocol are vendored into the plugin (`lib/vendor/matt-pocock/`), so the skill is self-contained.
+
+### `/plugin-maker`
+
+Run `/plugin-maker` in a folder – empty for a new plugin, or an existing plugin to add a skill – optionally with a plan: `/plugin-maker <plan>`. It resolves your author identity (from `git`, `gh` and sibling repos), interviews the plugin's design, generates the standard shell from `lib/templates/`, authors each skill through the `skill-maker` process, wires the plugin together, then runs `/agents-md`, initialises git and commits a baseline. It stops there: it never creates the GitHub repository, pushes, or releases – review the result, then `gh repo create` and release yourself.
 
 ### `/help`
 

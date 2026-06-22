@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.5.0] – 2026-06-22
+
+### Added
+
+- **`/skill-maker`** – authors one complete skill to the Kntnt standard. It interviews the user one question at a time, applies Matt Pocock's skill-writing craft together with Kntnt's house conventions, and writes the `SKILL.md` (and any shared `lib/` it needs). User-invoked; built to be driven standalone or by `/plugin-maker`.
+- **`/plugin-maker`** – scaffolds a whole Claude Code / Cowork plugin to the Kntnt standard. It resolves the author identity, interviews the plugin's design, generates the standard file shell from `lib/templates/` with the identity filled in, authors each skill through the `skill-maker` process, wires up the help command, audit, README and changelog, then runs `agents-md`, initialises git and stops before anything outward-facing. Handles greenfield (an empty folder) and augment (adding a skill to an existing plugin) by detecting `.claude-plugin/plugin.json`.
+- **`lib/plugin-standard.md`, `lib/skill-conventions.md`, `lib/protocols/interview.md`** – the single source of truth the two new skills generate from and the audit verifies against: the canonical plugin shape and conditional-file rules, the house skill conventions, and the shared interview protocol.
+- **`lib/vendor/matt-pocock/`** – Matt Pocock's `writing-great-skills` (`SKILL.md` + `GLOSSARY.md`) and `grilling` skill, vendored verbatim under the MIT licence with attribution (see the directory's `LICENSE` and the `NOTICE` file). They are the craft and interview references the two new skills build on.
+- **`lib/templates/`** – the token-parameterised boilerplate `plugin-maker` copies and fills (manifest, marketplace, README, CONTRIBUTING, CHANGELOG, LICENSE, NOTICE, `.gitignore`, pre-commit, CI workflow, issue template, settings, the help command, a verbatim `help.py`, and a tier-1 `audit.py` skeleton).
+- **Standard infrastructure for this plugin itself** – `scripts/audit.py` (the universal checks plus a structural check that the vendored files are present), `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/bug.md`, `.github/workflows/audit.yml`, `.pre-commit-config.yaml` and `.claude/settings.json`, bringing `kntnt-skills` up to the standard the new skills enforce.
+
+### Changed
+
+- **`README.md`** now documents all four skills, adds an Audit badge, notes the vendored Matt Pocock content, and records that `uv` is now used for both `/help` and the audit.
+- **`.gitignore`** adopts the standard base (macOS, editor and Python-cache entries) alongside the existing local eval-workspace entry.
+- **`skills/agents-md/SKILL.md`** prose reflowed to one physical line per paragraph (the project's Markdown convention); no content or behaviour change. `skills/caveman/SKILL.md` and `lib/caveman.md` already conformed.
+
 ## [0.4.0] – 2026-06-20
 
 ### Added
@@ -49,7 +66,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Plugin manifest (`.claude-plugin/plugin.json`) and single-plugin marketplace (`.claude-plugin/marketplace.json`) so the plugin installs via `/plugin marketplace add Kntnt/kntnt-skills`.
 - `README.md`, `LICENSE` (Apache-2.0), `NOTICE` and an agent guide (`AGENTS.md` with the `CLAUDE.md` bridge).
 
-[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.0
 [0.4.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.2.0

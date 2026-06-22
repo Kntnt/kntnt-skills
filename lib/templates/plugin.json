@@ -1,0 +1,14 @@
+{
+  "name": "{{PLUGIN_NAME}}",
+  "version": "0.1.0",
+  "description": "{{PLUGIN_DESCRIPTION}}",
+  "author": {
+    "name": "{{AUTHOR_NAME}}",
+    "email": "{{AUTHOR_EMAIL}}",
+    "url": "{{AUTHOR_URL}}"
+  },
+  "homepage": "https://github.com/{{OWNER}}/{{PLUGIN_NAME}}",
+  "repository": "https://github.com/{{OWNER}}/{{PLUGIN_NAME}}",
+  "license": "Apache-2.0",
+  "keywords": [{{KEYWORDS}}]
+}

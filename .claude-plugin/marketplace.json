@@ -8,7 +8,7 @@
     {
       "name": "kntnt-skills",
       "source": { "source": "github", "repo": "Kntnt/kntnt-skills" },
-      "description": "General-purpose Kntnt skills for Claude Code that do not belong to a specialised plugin. Ships the agents-md and caveman skills."
+      "description": "General-purpose Kntnt skills for Claude Code and Cowork that do not belong to a specialised plugin. Ships the agents-md, caveman, skill-maker and plugin-maker skills."
     }
   ]
 }

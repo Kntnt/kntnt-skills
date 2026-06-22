@@ -8,3 +8,14 @@ skills – the ones that are useful on their own but do not belong to any of the
 themed Kntnt plugins.
 
 Made by Kntnt.
+
+---
+
+This product bundles third-party software:
+
+Matt Pocock's skills (https://github.com/mattpocock/skills), licensed under the
+MIT License and vendored verbatim under lib/vendor/matt-pocock/. The full licence
+text and copyright notice (Copyright (c) 2026 Matt Pocock) are in
+lib/vendor/matt-pocock/LICENSE. The skill-maker and plugin-maker skills build on
+these files; Kntnt's own conventions on top of them are in lib/skill-conventions.md
+and lib/plugin-standard.md.
