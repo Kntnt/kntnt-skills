@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **`agents-md` is now model-invocable.** The `disable-model-invocation: true` flag is removed and the `description` rewritten in the explicit-only style (the trigger boundary is now the sole guard), so `init` can invoke it by qualified name (`kntnt-skills:agents-md`). It still fires only on explicit invocation and never on a bare mention of AGENTS.md/CLAUDE.md. `skill-conventions.md` notes the pattern: a skill that must be both explicit-only and reachable by another skill keeps a model-invoked, ruthlessly explicit description rather than the flag.
+- **`plugin-maker` now lays its common base by invoking `kntnt-code-skills:init`** (git, the `agents-md` skeleton, the coding standard, a licence, the generic README/CHANGELOG/CONTRIBUTING/NOTICE, and `.gitignore`), then layers the plugin-specific files on top. Its boundary is relaxed: it **may** make the initial commit and create the GitHub repository (through `init`'s questions), but still **stops before `/release`**.
+
+### Added
+
+- **`agents-md --force`** lays the canonical skeleton (`CLAUDE.md` = `@AGENTS.md`, an `AGENTS.md` with the Ground rules block and an empty `## References`, and an `agents.d/` with a `.gitkeep`) on a project where ordinary discovery would write nothing — the seam `init` uses to seed a new project. On a project that already warrants content, `--force` is a normal run.
+
 ## [0.5.1] – 2026-06-22
 
 ### Changed

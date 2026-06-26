@@ -22,7 +22,7 @@ A Kntnt skill fires only on phrasing that **names the plugin or the skill explic
 Two choices, per Matt's *Invocation* section — pick by who must reach the skill:
 
 - **Model-invoked** (default) — keep a `description` with rich, plugin-anchored trigger phrasing; omit `disable-model-invocation`. Costs context load (the description sits in the window every turn), but the agent and other skills can reach it.
-- **User-invoked** — set `disable-model-invocation: true`; the `description` becomes a one-line human-facing summary with the trigger lists stripped. Zero context load. Use it for typed-only utilities — the `help`, `caveman`, `agents-md` pattern in this plugin — where the skill should never fire on its own.
+- **User-invoked** — set `disable-model-invocation: true`; the `description` becomes a one-line human-facing summary with the trigger lists stripped. Zero context load. Use it for typed-only utilities — the `help`, `caveman` pattern in this plugin — where the skill should never fire on its own and no other skill needs to reach it. (A skill that must stay explicit-only *and* be reachable by another skill — `agents-md`, which `init` invokes by qualified name — instead keeps a model-invoked, ruthlessly explicit `description` as its only guard.)
 
 ## The intro paragraph is the help contract
 

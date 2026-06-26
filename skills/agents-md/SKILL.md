@@ -1,7 +1,6 @@
 ---
 name: agents-md
-description: Create, shrink, or delete AGENTS.md / CLAUDE.md so an agent loads the fewest possible tokens and nothing misleading. Aggressively minimizes always-loaded context — writes nothing when nothing earns a place, compresses what stays, splits the rest into small on-demand agents.d/ files. User-invoked — /agents-md (repo), /agents-md <path>, /agents-md --global, --max-iterations=N, --no-claude-md, --only-claude-md.
-disable-model-invocation: true
+description: Create, shrink, or delete AGENTS.md / CLAUDE.md / agents.d/ so an agent loads the fewest possible tokens and nothing misleading — aggressively minimizing always-loaded context, writing nothing when nothing earns a place, compressing what stays, splitting the rest into small on-demand agents.d/ files. Activate only when explicitly invoked — `/agents-md`, `/kntnt-skills:agents-md`, `/agents-md <path>`, `/agents-md --global`, or unmistakable plugin-anchored phrasing; flags `--force`, `--max-iterations=N`, `--no-claude-md`, `--only-claude-md`. Do not activate on bare mentions of AGENTS.md, CLAUDE.md, or context files, and never on a vague "set up project context". Because it deletes files, it is explicit-only — when in doubt, do not trigger.
 ---
 
 # agents-md
@@ -182,6 +181,17 @@ Explicit only:
 - `--max-iterations=N` → build-loop ceiling (default 2).
 - `--no-claude-md` → write only `AGENTS.md`, no `CLAUDE.md` bridge. For repos read by AGENTS.md-native tools (Codex, Cursor) where you keep CLAUDE.md yourself. **Trade-off: Claude Code won't auto-load AGENTS.md without the bridge** — state this in the report.
 - `--only-claude-md` → write a single `CLAUDE.md` holding the canon directly (not `@AGENTS.md`); no AGENTS.md, no bridge. Claude-only: trades cross-tool portability for one fewer file.
+- `--force` → lay the canonical skeleton even when discovery finds nothing that earns a place (see below). On a project that already warrants content, `--force` is a normal run. It composes with the shape flags but is independent of them.
+
+### `--force` — lay the skeleton anyway
+
+Run normal discovery first — all three gates, conflict detection, the build loop. `--force` changes **only** the terminal "nothing earns a place → create nothing" outcome: instead of writing nothing, lay the canonical skeleton so a fresh project has the shape ready to grow into. This is what `/init` calls to seed a new project. The skeleton:
+
+- **`CLAUDE.md`** — exactly `@AGENTS.md` (or, under a shape flag, the file that flag selects).
+- **`AGENTS.md`** — `# <project> — agent guide`, the **Ground rules (authoritative)** block, an empty `## References` heading, and any real facts discovery did surface (compressed as always).
+- **`agents.d/`** — the directory, with a `.gitkeep` so it is tracked while empty.
+
+`--force` never bloats: it does not invent facts, and everything discovery *did* find still passes the gates and is compressed. It only refuses to write *nothing*. On a project where discovery already yields content, `--force` adds nothing beyond that content plus the empty-`agents.d/` floor.
 
 The two file-shape flags are mutually exclusive — reject if both are given. Neither applies to `--global` (already CLAUDE.md-only). They change nothing but the always-loaded filename and the bridge — gates, compression, `agents.d/`, and the References index are identical: default = AGENTS.md + `@AGENTS.md` bridge; `--no-claude-md` = AGENTS.md alone; `--only-claude-md` = CLAUDE.md alone (content inline). In the mode table below, read "`CLAUDE.md`=`@AGENTS.md` + AGENTS.md" as the always-loaded file the active flag selects.
 
@@ -189,7 +199,7 @@ The two file-shape flags are mutually exclusive — reject if both are given. Ne
 
 | State | Action |
 | --- | --- |
-| Neither file | If gate 1 yields facts → create `CLAUDE.md`=`@AGENTS.md` + compressed AGENTS.md. **If gate 1 yields nothing → create nothing; report why.** |
+| Neither file | If gate 1 yields facts → create `CLAUDE.md`=`@AGENTS.md` + compressed AGENTS.md. **If gate 1 yields nothing → create nothing; report why** — unless `--force`, which lays the canonical skeleton anyway. |
 | Only `CLAUDE.md` | Move portable content → AGENTS.md; `CLAUDE.md` → `@AGENTS.md`. If nothing survives gate 1 → propose deleting both. |
 | Only `AGENTS.md` | Claude can't see it. Add `CLAUDE.md`=`@AGENTS.md`; compress AGENTS.md. |
 | Both | Compress both; dedupe; CLAUDE.md → `@AGENTS.md`. Delete either if it fails gate 1. |
