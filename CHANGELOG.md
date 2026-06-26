@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.0] – 2026-06-26
+
 ### Changed
 
 - **`agents-md` is now model-invocable.** The `disable-model-invocation: true` flag is removed and the `description` rewritten in the explicit-only style (the trigger boundary is now the sole guard), so `init` can invoke it by qualified name (`kntnt-skills:agents-md`). It still fires only on explicit invocation and never on a bare mention of AGENTS.md/CLAUDE.md. `skill-conventions.md` notes the pattern: a skill that must be both explicit-only and reachable by another skill keeps a model-invoked, ruthlessly explicit description rather than the flag.
@@ -81,7 +83,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Plugin manifest (`.claude-plugin/plugin.json`) and single-plugin marketplace (`.claude-plugin/marketplace.json`) so the plugin installs via `/plugin marketplace add Kntnt/kntnt-skills`.
 - `README.md`, `LICENSE` (Apache-2.0), `NOTICE` and an agent guide (`AGENTS.md` with the `CLAUDE.md` bridge).
 
-[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.6.0
 [0.5.1]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.0
 [0.4.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.4.0
