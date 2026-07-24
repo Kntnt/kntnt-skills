@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.1] – 2026-07-24
+
+### Changed
+
+- **`/fabulous` state is now per-session.** The state file moved from `~/.claude/fabulous.json` to `fabulous.json` in the session's scratchpad directory, so the mode can never leak into another session — a fresh session always starts OFF (in an environment without a scratchpad, the state is held in conversation alone). The mode's boundary is sharpened: it governs only choices the user leaves open — an explicit instruction naming the executor ("do this yourself", "spawn a subagent", "use haiku") always wins, ON or OFF — and turning OFF now explicitly renders the working-mode text inert history rather than merely dropping it.
+
 ## [0.7.0] – 2026-07-24
 
 ### Added
@@ -89,7 +95,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Plugin manifest (`.claude-plugin/plugin.json`) and single-plugin marketplace (`.claude-plugin/marketplace.json`) so the plugin installs via `/plugin marketplace add Kntnt/kntnt-skills`.
 - `README.md`, `LICENSE` (Apache-2.0), `NOTICE` and an agent guide (`AGENTS.md` with the `CLAUDE.md` bridge).
 
-[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.7.1
 [0.7.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.7.0
 [0.6.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.6.0
 [0.5.1]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.1
