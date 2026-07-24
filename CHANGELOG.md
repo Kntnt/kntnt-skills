@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.0] – 2026-07-24
+
+### Added
+
+- **`/fabulous`** – toggles the fabulous working mode: the agent orchestrates (thinks, plans, briefs, verifies) while subagents execute on the lowest model judged able to do the job at the inherited effort level (ladder haiku < sonnet < opus < fable, never a model stronger than the delegating agent itself) — except when doing the job itself is cheaper than brief + agent reading + report. `/fabulous` toggles, `--on`/`--off` force a state, `--status` reports. Turning it on notes the current model and effort in `~/.claude/fabulous.json`; turning it off reports and clears them. The skill only confirms its state — it never switches model or effort (a skill cannot run interactive commands) and never prompts the user to; running `/model` / `/effort` is the user's own move.
+
 ## [0.6.0] – 2026-06-26
 
 ### Changed
@@ -83,7 +89,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Plugin manifest (`.claude-plugin/plugin.json`) and single-plugin marketplace (`.claude-plugin/marketplace.json`) so the plugin installs via `/plugin marketplace add Kntnt/kntnt-skills`.
 - `README.md`, `LICENSE` (Apache-2.0), `NOTICE` and an agent guide (`AGENTS.md` with the `CLAUDE.md` bridge).
 
-[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.7.0
 [0.6.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.6.0
 [0.5.1]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.5.0
