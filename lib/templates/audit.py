@@ -234,9 +234,13 @@ def check_skill_dirs() -> CheckResult:
 # --- Plugin-specific structural checks -------------------------------------
 # Add tier-2 checks here: any hand-maintained index that must mirror files on
 # disk (a lib/.../_index.md vs its sibling files, a CANONICAL_ORDER vs its
-# modules). Check both directions — a file with no index entry is invisible; an
-# index entry with no file makes the reader read a missing file. Append each new
-# check function to CHECKS below.
+# modules, the ${CLAUDE_PLUGIN_ROOT}/lib/... paths a skill reads vs the files on
+# disk). Check both directions — a file with no index entry is invisible; an
+# index entry with no file makes the reader read a missing file — unless the
+# reverse would fire on healthy files, as it does for the lib/ paths, where a
+# file no path names is reached another way. Prefer deriving the index over
+# hand-keeping it: a check derived from the references guards a new module the
+# moment something reads it. Append each new check function to CHECKS below.
 
 
 CHECKS: tuple[Callable[[], CheckResult], ...] = (

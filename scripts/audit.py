@@ -5,10 +5,11 @@
 """Audit script for kntnt-skills.
 
 Runs every scriptable check of the Kntnt plugin standard (the universal tier-1
-checks) plus this plugin's own structural checks: the vendored Matt Pocock files
-that skill-maker and plugin-maker depend on, and the shared lib/ modules the
-skills read at runtime, must all be present. Cognitive checks (whether a skill's
-prose is self-contained, whether a trigger boundary is sound) stay manual.
+checks) plus this plugin's own structural checks on lib/, the shared content the
+skills read at runtime: every `${CLAUDE_PLUGIN_ROOT}/lib/…` path a skill names
+must exist, and so must the handful of lib/ files that must ship although no
+skill names them. Cognitive checks (whether a skill's prose is self-contained,
+whether a trigger boundary is sound) stay manual.
 
 Exit code 0 when no findings are produced; exit code 1 otherwise. A tabulated
 report is written to stdout in both cases.
@@ -35,25 +36,29 @@ PLUGIN_JSON: Path = REPO_ROOT / ".claude-plugin" / "plugin.json"
 MARKETPLACE_JSON: Path = REPO_ROOT / ".claude-plugin" / "marketplace.json"
 CHANGELOG: Path = REPO_ROOT / "CHANGELOG.md"
 SKILLS_DIR: Path = REPO_ROOT / "skills"
+COMMANDS_DIR: Path = REPO_ROOT / "commands"
 LIB_DIR: Path = REPO_ROOT / "lib"
-VENDOR_DIR: Path = LIB_DIR / "vendor" / "matt-pocock"
 
-# The vendored Matt Pocock files skill-maker and plugin-maker read. Their absence
-# would silently break those skills, so the audit treats them as load-bearing.
-VENDORED_FILES: tuple[str, ...] = (
-    "LICENSE",
-    "writing-great-skills/SKILL.md",
-    "writing-great-skills/GLOSSARY.md",
-    "grilling/SKILL.md",
+# The Markdown under these directories is scanned for lib/ references.
+REFERENCE_SOURCE_DIRS: tuple[Path, ...] = (SKILLS_DIR, COMMANDS_DIR, LIB_DIR)
+
+# One `${CLAUDE_PLUGIN_ROOT}/lib/<path>` reference. The path runs to the first
+# whitespace or markdown delimiter that closes it in prose — `*` included, since
+# no path contains one — and trailing sentence punctuation is stripped afterwards.
+LIB_REFERENCE_PATTERN: re.Pattern[str] = re.compile(
+    r"\$\{CLAUDE_PLUGIN_ROOT\}/lib/([^\s`*)\]\"']*)"
 )
 
-# The shared lib/ modules the skills read at runtime. Their absence would silently
-# break the skills that read them, so the audit treats them as load-bearing too.
-LIB_FILES: tuple[str, ...] = (
-    "delegation-mode.md",
-    "caveman.md",
-    "skill-conventions.md",
-    "plugin-standard.md",
+# The lib/ files that must ship although no path names them, so the derived check
+# cannot see them. Every entry needs the reason it cannot be derived — that is
+# what keeps this list from growing back into a hand-kept mirror of lib/.
+REQUIRED_WITHOUT_PATH_REFERENCE: tuple[str, ...] = (
+    # A licence obligation of the vendored Matt Pocock material: it must ship, but
+    # nothing reads it at runtime, so no skill ever names its path.
+    "vendor/matt-pocock/LICENSE",
+    # skill-conventions.md sends the reader here in prose — "with its
+    # `GLOSSARY.md`" — never as a `${CLAUDE_PLUGIN_ROOT}` path.
+    "vendor/matt-pocock/writing-great-skills/GLOSSARY.md",
 )
 
 
@@ -252,32 +257,73 @@ def check_skill_dirs() -> CheckResult:
     return result
 
 
-def check_vendored_files() -> CheckResult:
-    """(d) — the vendored Matt Pocock files skill-maker and plugin-maker read are
-    present. A structural (tier-2) check: their absence would silently break both
-    skills, so the audit guards them."""
+def lib_references() -> dict[str, list[str]]:
+    """Every `${CLAUDE_PLUGIN_ROOT}/lib/<path>` named in the Markdown under
+    REFERENCE_SOURCE_DIRS, mapped to the repository-relative files naming it.
 
-    result = CheckResult(name="(d) vendored Matt Pocock files present")
-    for rel in VENDORED_FILES:
-        path = VENDOR_DIR / rel
-        if not path.is_file():
-            result.findings.append(
-                Finding(result.name, relpath(path), None, "missing vendored file")
+    Generic forms are not references and are dropped: a bare `lib/` is the
+    directory itself, and `lib/…` is the placeholder the standard and the skill
+    conventions use when describing the convention — hence the non-ASCII test.
+    """
+
+    references: dict[str, list[str]] = {}
+    for root in REFERENCE_SOURCE_DIRS:
+        if not root.is_dir():
+            continue
+        for md in sorted(root.rglob("*.md")):
+            source = relpath(md)
+            for match in LIB_REFERENCE_PATTERN.finditer(read_text(md)):
+                target = match.group(1).rstrip(".,:;!?")
+                if not target or not target.isascii():
+                    continue
+                sources = references.setdefault(target, [])
+                if source not in sources:
+                    sources.append(source)
+    return references
+
+
+def check_lib_references() -> CheckResult:
+    """(d) — every `${CLAUDE_PLUGIN_ROOT}/lib/…` path a skill, command or lib
+    module names exists. A structural (tier-2) check derived from the references
+    themselves: a missing target breaks its reader silently, and deriving it
+    means a new shared module is guarded the moment a skill reads it.
+
+    Only this direction. A lib/ file that no path names is not dead — `templates/`
+    is reached as a directory and the vendored files partly through prose — so the
+    reverse check would fire on healthy files.
+    """
+
+    result = CheckResult(name="(d) referenced lib/ paths exist")
+    for target, sources in sorted(lib_references().items()):
+        # A reference ending in `/` names a directory, anything else a file.
+        is_directory = target.endswith("/")
+        path = LIB_DIR / target
+        exists = path.is_dir() if is_directory else path.is_file()
+        if exists:
+            continue
+        kind = "directory" if is_directory else "file"
+        result.findings.append(
+            Finding(
+                result.name,
+                relpath(path),
+                None,
+                f"missing {kind}, referenced from {', '.join(sources)}",
             )
+        )
     return result
 
 
-def check_lib_files() -> CheckResult:
-    """(e) — the shared lib/ modules the skills read are present. A structural
-    (tier-2) check: their absence would silently break the skills that read
-    them, so the audit guards them."""
+def check_required_without_path_reference() -> CheckResult:
+    """(e) — the lib/ files that must ship although no path names them. A
+    structural (tier-2) check covering exactly what (d) cannot see: with no
+    reference to derive it from, this one stays a hand-kept list."""
 
-    result = CheckResult(name="(e) shared lib/ modules present")
-    for rel in LIB_FILES:
+    result = CheckResult(name="(e) lib/ files required without a path reference")
+    for rel in REQUIRED_WITHOUT_PATH_REFERENCE:
         path = LIB_DIR / rel
         if not path.is_file():
             result.findings.append(
-                Finding(result.name, relpath(path), None, "missing lib module")
+                Finding(result.name, relpath(path), None, "missing required file")
             )
     return result
 
@@ -286,8 +332,8 @@ CHECKS: tuple[Callable[[], CheckResult], ...] = (
     check_plugin_json_and_version,
     check_marketplace_json,
     check_skill_dirs,
-    check_vendored_files,
-    check_lib_files,
+    check_lib_references,
+    check_required_without_path_reference,
 )
 
 
