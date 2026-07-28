@@ -4,6 +4,20 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **`/fabulous` is now `/delegation`, and the mode is settable at three scopes.** The skill directory moved from `skills/fabulous/` to `skills/delegation/`; the noun replaces the adjective, so `/delegation --on` and "delegation mode is on" use the same word. Session scope stays the default and the only togglable one (state in `kntnt-skills-delegation.json` in the session's scratchpad, replacing `fabulous.json`), and `--user` / `--project` make the mode standing by writing it as a managed block — fenced in `<!-- kntnt-skills:delegation -->` comments — at the end of the context file the host already loads: `~/.claude/CLAUDE.md` for the user, the project's own `AGENTS.md` / `CLAUDE.md` (created and bridged when absent) for the project. Persistent scopes never toggle, always confirm the exact file and insertion first, and warn that a project's context file is normally committed, so every clone gets the mode. `--status` reports all three scopes, the verdict and any drift from the installed `lib/delegation-mode.md`; a session `--off` suspends the standing block rather than removing it.
+- **The working-mode text moved out of the skill into `lib/delegation-mode.md`** — self-contained, host-neutral and free of any mechanism, because it is copied verbatim into users' context files and read by non-Claude agents. `SKILL.md` no longer restates it. The wording is sharpened where testing showed it did not bite: thinking is *never* delegated (understanding, diagnosis, the decision, the brief, verification, the final answer), and doing it yourself is right only when that *costs less than* brief + the agent's fresh-context reading + report.
+- **`agents-md` now recognises managed blocks.** A block fenced by `<!-- <plugin>:<skill> -->` … `<!-- /<plugin>:<skill> -->` is owned by that skill: gates, compression and conflict detection do not apply, and it is never edited, compressed, moved or deleted — only reported. Without this, two skills in the same plugin would fight over the same file.
+
+### Added
+
+- **Audit check `(e)`** – the shared `lib/` modules the skills read at runtime (`delegation-mode.md`, `caveman.md`, `skill-conventions.md`, `plugin-standard.md`) must be present. A tier-2 structural check, mirroring the existing vendored-files check: their absence would silently break the skills that read them.
+
+### Removed
+
+- **The `previousModel` / `previousEffort` memo** that `/fabulous` wrote when turned on, and with it the effort-detection procedure (`CLAUDE_CODE_EFFORT_LEVEL` → `.claude/settings.local.json` → `.claude/settings.json` → `~/.claude/settings.json`). Under scoping the memo would exist when the mode was turned on by command and be missing when it came from a context file — the same effective state with the memo sometimes present, and an absence discovered exactly when it is needed. Check `/status` **before** switching model or effort instead. As before, the skill never switches either and never suggests it.
+
 ## [0.7.1] – 2026-07-24
 
 ### Changed

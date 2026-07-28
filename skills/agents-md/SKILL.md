@@ -157,6 +157,12 @@ For a tiny change (delete a stub, fix one line, drop one section), skip the loop
 
 ---
 
+## Managed blocks
+
+A block fenced by `<!-- <plugin>:<skill> -->` … `<!-- /<plugin>:<skill> -->` is owned by that skill — not by you and not by the user's own curation. Gates, compression and conflict detection do not apply to it. Never edit, compress, move or delete it. Report it as managed, name the owning skill, move on. The user changes it by running that skill.
+
+---
+
 ## Conflict & duplication detection (vs skills)
 
 Scan installed skills — project `.claude/skills/`, user `~/.claude/skills/`, plugins. Read each `description` (cheap); deep-read a `SKILL.md` only when its description overlaps a line in AGENTS.md/CLAUDE.md.

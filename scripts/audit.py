@@ -5,10 +5,10 @@
 """Audit script for kntnt-skills.
 
 Runs every scriptable check of the Kntnt plugin standard (the universal tier-1
-checks) plus this plugin's own structural check: the vendored Matt Pocock files
-that skill-maker and plugin-maker depend on must be present. Cognitive checks
-(whether a skill's prose is self-contained, whether a trigger boundary is sound)
-stay manual.
+checks) plus this plugin's own structural checks: the vendored Matt Pocock files
+that skill-maker and plugin-maker depend on, and the shared lib/ modules the
+skills read at runtime, must all be present. Cognitive checks (whether a skill's
+prose is self-contained, whether a trigger boundary is sound) stay manual.
 
 Exit code 0 when no findings are produced; exit code 1 otherwise. A tabulated
 report is written to stdout in both cases.
@@ -35,7 +35,8 @@ PLUGIN_JSON: Path = REPO_ROOT / ".claude-plugin" / "plugin.json"
 MARKETPLACE_JSON: Path = REPO_ROOT / ".claude-plugin" / "marketplace.json"
 CHANGELOG: Path = REPO_ROOT / "CHANGELOG.md"
 SKILLS_DIR: Path = REPO_ROOT / "skills"
-VENDOR_DIR: Path = REPO_ROOT / "lib" / "vendor" / "matt-pocock"
+LIB_DIR: Path = REPO_ROOT / "lib"
+VENDOR_DIR: Path = LIB_DIR / "vendor" / "matt-pocock"
 
 # The vendored Matt Pocock files skill-maker and plugin-maker read. Their absence
 # would silently break those skills, so the audit treats them as load-bearing.
@@ -44,6 +45,15 @@ VENDORED_FILES: tuple[str, ...] = (
     "writing-great-skills/SKILL.md",
     "writing-great-skills/GLOSSARY.md",
     "grilling/SKILL.md",
+)
+
+# The shared lib/ modules the skills read at runtime. Their absence would silently
+# break the skills that read them, so the audit treats them as load-bearing too.
+LIB_FILES: tuple[str, ...] = (
+    "delegation-mode.md",
+    "caveman.md",
+    "skill-conventions.md",
+    "plugin-standard.md",
 )
 
 
@@ -257,11 +267,27 @@ def check_vendored_files() -> CheckResult:
     return result
 
 
+def check_lib_files() -> CheckResult:
+    """(e) — the shared lib/ modules the skills read are present. A structural
+    (tier-2) check: their absence would silently break the skills that read
+    them, so the audit guards them."""
+
+    result = CheckResult(name="(e) shared lib/ modules present")
+    for rel in LIB_FILES:
+        path = LIB_DIR / rel
+        if not path.is_file():
+            result.findings.append(
+                Finding(result.name, relpath(path), None, "missing lib module")
+            )
+    return result
+
+
 CHECKS: tuple[Callable[[], CheckResult], ...] = (
     check_plugin_json_and_version,
     check_marketplace_json,
     check_skill_dirs,
     check_vendored_files,
+    check_lib_files,
 )
 
 
