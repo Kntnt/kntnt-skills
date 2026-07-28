@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.8.0] – 2026-07-28
+
 ### Changed
 
 - **`/fabulous` is now `/delegation`, and the mode is settable at three scopes.** The skill directory moved from `skills/fabulous/` to `skills/delegation/`; the noun replaces the adjective, so `/delegation --on` and "delegation mode is on" use the same word. Session scope stays the default and the only togglable one (state in `kntnt-skills-delegation.json` in the session's scratchpad, replacing `fabulous.json`), and `--user` / `--project` make the mode standing by writing it as a managed block — fenced in `<!-- kntnt-skills:delegation -->` comments — at the end of the context file the host already loads: `~/.claude/CLAUDE.md` for the user, the project's own `AGENTS.md` / `CLAUDE.md` (created and bridged when absent) for the project. Persistent scopes never toggle, always confirm the exact file and insertion first, and warn that a project's context file is normally committed, so every clone gets the mode. `--status` reports all three scopes, the verdict and any drift from the installed `lib/delegation-mode.md`; a session `--off` suspends the standing block rather than removing it.
@@ -111,7 +113,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Plugin manifest (`.claude-plugin/plugin.json`) and single-plugin marketplace (`.claude-plugin/marketplace.json`) so the plugin installs via `/plugin marketplace add Kntnt/kntnt-skills`.
 - `README.md`, `LICENSE` (Apache-2.0), `NOTICE` and an agent guide (`AGENTS.md` with the `CLAUDE.md` bridge).
 
-[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/Kntnt/kntnt-skills/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.8.0
 [0.7.1]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.7.1
 [0.7.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.7.0
 [0.6.0]: https://github.com/Kntnt/kntnt-skills/releases/tag/v0.6.0
